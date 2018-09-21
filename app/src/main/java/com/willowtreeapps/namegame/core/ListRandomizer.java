@@ -1,11 +1,11 @@
 package com.willowtreeapps.namegame.core;
 
-import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import androidx.annotation.NonNull;
 
 public class ListRandomizer {
 

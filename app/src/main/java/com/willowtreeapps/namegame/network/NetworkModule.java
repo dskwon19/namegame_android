@@ -2,7 +2,6 @@ package com.willowtreeapps.namegame.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.jakewharton.picasso.OkHttp3Downloader;
@@ -17,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import androidx.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;

@@ -2,8 +2,9 @@ package com.willowtreeapps.namegame.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+
+import androidx.annotation.NonNull;
 
 public final class Ui {
 
