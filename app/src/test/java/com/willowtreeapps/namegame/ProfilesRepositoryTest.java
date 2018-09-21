@@ -1,7 +1,5 @@
 package com.willowtreeapps.namegame;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 import com.willowtreeapps.namegame.network.api.NameGameApi;
 import com.willowtreeapps.namegame.network.api.ProfilesRepository;
 import com.willowtreeapps.namegame.network.api.model.Person;
@@ -14,6 +12,8 @@ import org.junit.rules.ExpectedException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.test.filters.SmallTest;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;

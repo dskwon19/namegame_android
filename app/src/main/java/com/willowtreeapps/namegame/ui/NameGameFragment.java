@@ -17,6 +17,7 @@ import com.willowtreeapps.namegame.network.api.model.Person;
 import com.willowtreeapps.namegame.network.api.model.Profiles;
 import com.willowtreeapps.namegame.util.CircleBorderTransform;
 import com.willowtreeapps.namegame.util.Ui;
+import com.willowtreeapps.namegame.viewmodel.ProfilesViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,8 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class NameGameFragment extends Fragment {
 
@@ -44,6 +47,13 @@ public class NameGameFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         NameGameApplication.get(getActivity()).component().inject(this);
+        ProfilesViewModel profilesViewModel = ViewModelProviders.of(getActivity()).get(ProfilesViewModel.class);
+        profilesViewModel.getPerson().observe(this, new Observer<Person>() {
+            @Override
+            public void onChanged(Person person) {
+                // TODO User selected this person. Determine correct or incorrect on UI
+            }
+        });
     }
 
     @Nullable

@@ -1,61 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/name_game_title_text_margin"
-        android:textSize="22sp"
-        android:textColor="@color/darkGray"
-        android:gravity="center_horizontal"/>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="profilesViewModel"
+            type="com.willowtreeapps.namegame.viewmodel.ProfilesViewModel" />
+    </data>
 
     <LinearLayout
-        android:id="@+id/face_container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-        <ImageView
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/name_game_title_text_margin"
+            android:textSize="22sp"
+            android:textColor="@color/darkGray"
+            android:gravity="center_horizontal"/>
+
+        <LinearLayout
+            android:id="@+id/face_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/row1"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> profilesViewModel.onClick(0)"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cdFace"/>
+
+            <ImageView
+                android:id="@+id/row2"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> profilesViewModel.onClick(1)"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cdFace"/>
+
+            <ImageView
+                android:id="@+id/row3"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> profilesViewModel.onClick(2)"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cdFace"/>
+
+            <ImageView
+                android:id="@+id/row4"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> profilesViewModel.onClick(3)"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cdFace"/>
+
+            <ImageView
+            android:id="@+id/row5"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:onClick="@{() -> profilesViewModel.onClick(4)"
             android:background="@android:color/transparent"
             android:contentDescription="@string/cdFace"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/cdFace"/>
+            <ImageView
+                android:id="@+id/row6"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:onClick="@{() -> profilesViewModel.onClick(5)"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/cdFace"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/cdFace"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/cdFace"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/cdFace"/>
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>
