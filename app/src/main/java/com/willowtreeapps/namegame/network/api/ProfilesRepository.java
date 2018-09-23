@@ -1,6 +1,7 @@
 package com.willowtreeapps.namegame.network.api;
 
 
+import com.willowtreeapps.namegame.network.api.model.Person;
 import com.willowtreeapps.namegame.network.api.model.Profiles;
 
 import java.util.ArrayList;
@@ -31,17 +32,17 @@ public class ProfilesRepository {
     }
 
     private void load() {
-        this.api.getProfiles().enqueue(new Callback<Profiles>() {
+        this.api.getPeople().enqueue(new Callback<List<Person>>() {
             @Override
-            public void onResponse(Call<Profiles> call, Response<Profiles> response) {
-                profiles = response.body();
+            public void onResponse(Call<List<Person>> call, Response<List<Person>> response) {
+                profiles = new Profiles(response.body(), null);
                 for (Listener listener : listeners) {
                     listener.onLoadFinished(profiles);
                 }
             }
 
             @Override
-            public void onFailure(Call<Profiles> call, Throwable t) {
+            public void onFailure(Call<List<Person>> call, Throwable t) {
                 for (Listener listener : listeners) {
                     listener.onError(t);
                 }

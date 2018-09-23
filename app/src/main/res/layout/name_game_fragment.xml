@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable
-            name="profilesViewModel"
-            type="com.willowtreeapps.namegame.viewmodel.ProfilesViewModel" />
-    </data>
-
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -33,7 +26,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> profilesViewModel.onClick(0)"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cdFace"/>
 
@@ -42,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> profilesViewModel.onClick(1)"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cdFace"/>
 
@@ -51,7 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> profilesViewModel.onClick(2)"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cdFace"/>
 
@@ -60,25 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> profilesViewModel.onClick(3)"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cdFace"/>
 
             <ImageView
-            android:id="@+id/row5"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:onClick="@{() -> profilesViewModel.onClick(4)"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/cdFace"/>
-
-            <ImageView
-                android:id="@+id/row6"
+                android:id="@+id/row5"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:onClick="@{() -> profilesViewModel.onClick(5)"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/cdFace"/>
 
