@@ -41,6 +41,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import static com.willowtreeapps.namegame.viewmodel.NameGameViewModel.LIMIT;
+
 public class NameGameFragment extends Fragment {
 
     private static final Interpolator OVERSHOOT = new OvershootInterpolator();
@@ -63,12 +65,13 @@ public class NameGameFragment extends Fragment {
     private ViewGroup correctContainer;
     private Button nextRound;
 
-    private List<ImageView> faces = new ArrayList<>(6);
+    private List<ImageView> faces = new ArrayList<>(LIMIT);
     private NameGameViewModel nameGameViewModel;
 
     private final Random rand = new Random();
     private final Handler handler = new Handler();
     private Runnable hintRunnable;
+    private final int delay = 5000;
     private boolean hintEnabled;
 
     @Override
@@ -232,14 +235,14 @@ public class NameGameFragment extends Fragment {
     private void toggleHintMode(NameGame nameGame, boolean enabled) {
         if (enabled) {
             final Set<Integer> generated = new LinkedHashSet<>();
-            while (generated.size() < 3) {
-                Integer next = rand.nextInt(4) + 1;
+            // We'll leave two for the user to select
+            while (generated.size() < LIMIT - 2) {
+                Integer next = rand.nextInt(LIMIT);
                 if (next != nameGame.getRandomPeople().indexOf(nameGame.getCorrectPerson())) {
                     generated.add(next);
                 }
             }
             final Iterator<Integer> iter = generated.iterator();
-            final int delay = 5000;
 
             hintRunnable = new Runnable() {
                 @Override

@@ -31,6 +31,8 @@ public class NameGameViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> isCorrect = new MutableLiveData<>();
     private Profiles profiles;
 
+    public static final int LIMIT = 5;
+
     private ProfilesRepository.Listener profilesListener;
 
     public NameGameViewModel(Application application) {
@@ -82,7 +84,7 @@ public class NameGameViewModel extends AndroidViewModel {
      */
     public void createNewGame() {
         if (profiles != null) {
-            List<Person> randomPeople = listRandomizer.pickN(profiles.getPeople(), 5);
+            List<Person> randomPeople = listRandomizer.pickN(profiles.getPeople(), LIMIT);
             Person randomPerson = listRandomizer.pickOne(randomPeople);
 
             nameGame.postValue(new NameGame(randomPeople, randomPerson));

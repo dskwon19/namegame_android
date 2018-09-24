@@ -2,11 +2,8 @@ package com.willowtreeapps.namegame.network.api.model;
 
 import java.util.List;
 
-import androidx.lifecycle.MutableLiveData;
-
 public class NameGame {
 
-    private MutableLiveData<Boolean> correct = new MutableLiveData<>();
     private Person correctPerson;
     private List<Person> randomPeople;
 
