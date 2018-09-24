@@ -3,4 +3,8 @@
     <string name="question">Who is %s?</string>
     <string name="cdFace">A face</string>
     <string name="reset_data">Reset data</string>
+    <string name="correct_text">Nice! You\'re right!</string>
+    <string name="incorrect_text">Incorrect</string>
+    <string name="next_round">Next round</string>
+    <string name="meet">Meet</string>
 </resources>

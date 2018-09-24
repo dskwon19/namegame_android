@@ -33,9 +33,6 @@ public class NameGameViewModel extends AndroidViewModel {
     public NameGameViewModel(Application application) {
         super(application);
         NameGameApplication.get(application).component().inject(this);
-    }
-
-    public void init() {
         if (nameGame.getValue() == null) {
             registerProfilesRepo();
         }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,14 +20,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                tools:ignore="RelativeOverlap" />
 
             <ImageView
                 android:id="@+id/more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_more_vert_black_24dp"/>
+                android:src="@drawable/ic_more_vert_black_24dp"
+                tools:ignore="ContentDescription" />
 
         </RelativeLayout>
 
@@ -88,4 +93,67 @@
         </LinearLayout>
 
     </LinearLayout>
-</layout>
+
+    <RelativeLayout
+        android:id="@+id/correct_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/translucentDarkGray">
+
+        <TextView
+            android:id="@+id/is_correct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="96dp"
+            android:layout_marginBottom="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/offWhite"
+            android:textStyle="bold"
+            android:textSize="36sp"/>
+
+        <ImageView
+            android:id="@+id/correct_face"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_below="@id/is_correct"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/meet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/correct_face"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/offWhite"
+            android:text="@string/meet"
+            android:textAllCaps="true"
+            android:alpha="0.7"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/correct_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/meet"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/offWhite"
+            android:textStyle="bold"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="48dp"
+            android:layout_alignParentBottom="true"
+            android:padding="16dp"
+            android:text="@string/next_round"/>
+
+    </RelativeLayout>
+</RelativeLayout>

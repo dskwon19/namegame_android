@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.willowtreeapps.namegame.R;
@@ -51,6 +51,12 @@ public class NameGameFragment extends Fragment {
     private ViewGroup container;
     private TextView data;
     private ImageView more;
+    private ImageView correctFace;
+    private TextView isCorrect;
+    private TextView correctName;
+    private ViewGroup correctContainer;
+    private Button nextRound;
+
     private List<ImageView> faces = new ArrayList<>(6);
     private NameGameViewModel nameGameViewModel;
 
@@ -64,7 +70,6 @@ public class NameGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         nameGameViewModel = ViewModelProviders.of(this).get(NameGameViewModel.class);
-        nameGameViewModel.init();
         return inflater.inflate(R.layout.name_game_fragment, container, false);
     }
 
@@ -74,6 +79,12 @@ public class NameGameFragment extends Fragment {
         container = view.findViewById(R.id.face_container);
         data = view.findViewById(R.id.data);
         more = view.findViewById(R.id.more);
+        correctFace = view.findViewById(R.id.correct_face);
+        correctName = view.findViewById(R.id.correct_name);
+        isCorrect = view.findViewById(R.id.is_correct);
+        correctContainer = view.findViewById(R.id.correct_container);
+        nextRound = view.findViewById(R.id.next);
+
         prepareViewLoad();
         setNameGameListeners();
     }
@@ -84,6 +95,7 @@ public class NameGameFragment extends Fragment {
     private void prepareViewLoad() {
         //Hide the views until data loads
         title.setAlpha(0);
+        faces.clear();
 
         int n = container.getChildCount();
         for (int i = 0; i < n; i++) {
@@ -133,11 +145,16 @@ public class NameGameFragment extends Fragment {
             public void onChanged(Boolean correct) {
                 if (correct != null) {
                     if (correct) {
-                        Toast.makeText(getContext(), "CORRECT", Toast.LENGTH_SHORT).show();
+                        isCorrect.setText(R.string.correct_text);
                     } else {
-                        Toast.makeText(getContext(), "WRONG", Toast.LENGTH_SHORT).show();
+                        isCorrect.setText(R.string.incorrect_text);
                     }
-                    nameGameViewModel.createNewGame();
+                    correctContainer.setVisibility(View.VISIBLE);
+
+                    // Disable click when displaying the correct face
+                    for (int i = 0; i < faces.size(); i++) {
+                        faces.get(i).setOnClickListener(null);
+                    }
                 }
             }
         });
@@ -152,12 +169,43 @@ public class NameGameFragment extends Fragment {
         setImages(faces, nameGame.getRandomPeople());
         animateFacesIn();
 
-        title.setText(String.format("%s %s", nameGame.getCorrectPerson().getFirstName(), nameGame.getCorrectPerson().getLastName()));
+        String name = String.format("%s %s", nameGame.getCorrectPerson().getFirstName(), nameGame.getCorrectPerson().getLastName());
+
+        title.setText(name);
         title.setAlpha(1);
 
         setDataView();
+        prepareCorrectView(nameGame, name);
     }
 
+    /**
+     * Method to initialize view displaying the correct face and name
+     *
+     * @param nameGame The current NameGame
+     * @param name The name to display
+     */
+    private void prepareCorrectView(NameGame nameGame, String name) {
+        int imageSize = (int) Ui.convertDpToPixel(120, getContext());
+        correctContainer.setVisibility(View.GONE);
+        nextRound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prepareViewLoad();
+                nameGameViewModel.createNewGame();
+            }
+        });
+
+        correctName.setText(name);
+        picasso.load("http:" + nameGame.getCorrectPerson().getHeadshot().getUrl())
+                .placeholder(R.drawable.ic_face_white_48dp)
+                .resize(imageSize, imageSize)
+                .transform(new CircleBorderTransform())
+                .into(correctFace);
+    }
+
+    /**
+     * Method to set views related to data and analytics
+     */
     private void setDataView() {
         int correct = AnalyticsUtil.getCorrectAttempts(getContext());
         int total = AnalyticsUtil.getTotalAttempts(getContext());

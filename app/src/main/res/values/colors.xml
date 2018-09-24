@@ -7,4 +7,5 @@
     <color name="darkGray">#61665a</color>
     <color name="alphaRed">#77FF0000</color>
     <color name="alphaGreen">#7700B34D</color>
+    <color name="translucentDarkGray">#E6000000</color>
 </resources>
