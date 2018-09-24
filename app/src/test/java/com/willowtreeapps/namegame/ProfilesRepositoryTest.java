@@ -27,20 +27,19 @@ public class ProfilesRepositoryTest {
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    private static final Profiles PROFILES;
+    private static final List<Person> people;
 
     static {
-        List<Person> people = new ArrayList<>();
-        people.add(new Person("1", null, null, null, "Bill", "Smith", null, null));
-        people.add(new Person("2", null, null, null, "Pam", "White", null, null));
-        people.add(new Person("3", null, null, null, "Fred", "Doe", null, null));
-        PROFILES = new Profiles(people, null);
+        people = new ArrayList<>();
+        people.add(new Person("1", null, null, null, "Bill", "Smith", null));
+        people.add(new Person("2", null, null, null, "Pam", "White", null));
+        people.add(new Person("3", null, null, null, "Fred", "Doe", null));
     }
 
     @Test
     public void should_throw_for_multiple_registration_of_one_listener() throws Exception {
         NameGameApi api = mock(NameGameApi.class);
-        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(PROFILES));
+        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(people));
         ProfilesRepository repo = new ProfilesRepository(api);
         ProfilesRepository.Listener listener = mock(ProfilesRepository.Listener.class);
         repo.register(listener);
@@ -51,7 +50,7 @@ public class ProfilesRepositoryTest {
     @Test
     public void should_allow_registration_of_multiple_listeners() throws Exception {
         NameGameApi api = mock(NameGameApi.class);
-        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(PROFILES));
+        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(people));
         ProfilesRepository repo = new ProfilesRepository(api);
         ProfilesRepository.Listener one = mock(ProfilesRepository.Listener.class);
         ProfilesRepository.Listener two = mock(ProfilesRepository.Listener.class);
@@ -64,7 +63,7 @@ public class ProfilesRepositoryTest {
     @Test
     public void should_notify_new_registrants_on_success() throws Exception {
         NameGameApi api = mock(NameGameApi.class);
-        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(PROFILES));
+        when(api.getPeople()).thenReturn(SynchronousCallAdapter.forSuccess(people));
         ProfilesRepository repo = new ProfilesRepository(api);
         ProfilesRepository.Listener listener = mock(ProfilesRepository.Listener.class);
         repo.register(listener);
@@ -74,7 +73,7 @@ public class ProfilesRepositoryTest {
     @Test
     public void should_not_notify_new_registrants_on_load_failure() throws Exception {
         NameGameApi api = mock(NameGameApi.class);
-        when(api.getPeople()).thenReturn(SynchronousCallAdapter.<Profiles>forError());
+        when(api.getPeople()).thenReturn(SynchronousCallAdapter.<List<Person>>forError());
         ProfilesRepository repo = new ProfilesRepository(api);
         ProfilesRepository.Listener listener = mock(ProfilesRepository.Listener.class);
         repo.register(listener);
@@ -84,7 +83,7 @@ public class ProfilesRepositoryTest {
     @Test
     public void should_notify_existing_registrants_on_load_failure() throws Exception {
         NameGameApi api = mock(NameGameApi.class);
-        when(api.getPeople()).thenReturn(SynchronousCallAdapter.<Profiles>forError());
+        when(api.getPeople()).thenReturn(SynchronousCallAdapter.<List<Person>>forError());
         ProfilesRepository.Listener listener = mock(ProfilesRepository.Listener.class);
         ProfilesRepository repo = new ProfilesRepository(api, listener);
         verify(listener, times(1)).onError(any(IOException.class));

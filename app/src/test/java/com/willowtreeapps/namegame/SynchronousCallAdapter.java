@@ -1,9 +1,8 @@
 package com.willowtreeapps.namegame;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Callback;
@@ -22,7 +21,7 @@ public abstract class SynchronousCallAdapter<T> extends CallAdapter<T> {
     public void enqueue(Callback<T> callback) {
         try {
             Response<T> response = execute();
-            if (response.isSuccess()) {
+            if (response.isSuccessful()) {
                 callback.onResponse(this, response);
             } else {
                 throw new IOException(response.errorBody().string());

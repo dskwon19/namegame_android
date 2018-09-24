@@ -3,8 +3,6 @@ package com.willowtreeapps.namegame.network.api.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 public class Person implements Parcelable {
 
     private final String id;
@@ -14,7 +12,6 @@ public class Person implements Parcelable {
     private final String firstName;
     private final String lastName;
     private final Headshot headshot;
-//    private final List<String> socialLinks;
 
     public Person(String id,
                   String type,
@@ -22,8 +19,7 @@ public class Person implements Parcelable {
                   String jobTitle,
                   String firstName,
                   String lastName,
-                  Headshot headshot,
-                  List<String> socialLinks) {
+                  Headshot headshot) {
         this.id = id;
         this.type = type;
         this.slug = slug;
@@ -31,7 +27,6 @@ public class Person implements Parcelable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.headshot = headshot;
-//        this.socialLinks = socialLinks;
     }
 
     private Person(Parcel in) {
@@ -42,7 +37,6 @@ public class Person implements Parcelable {
         this.firstName = in.readString();
         this.lastName = in.readString();
         this.headshot = in.readParcelable(Headshot.class.getClassLoader());
-//        this.socialLinks = in.createStringArrayList();
     }
 
     public String getId() {
@@ -73,10 +67,6 @@ public class Person implements Parcelable {
         return headshot;
     }
 
-//    public List<String> getSocialLinks() {
-//        return socialLinks;
-//    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
@@ -86,7 +76,6 @@ public class Person implements Parcelable {
         dest.writeString(this.firstName);
         dest.writeString(this.lastName);
         dest.writeParcelable(this.headshot, flags);
-//        dest.writeStringList(this.socialLinks);
     }
 
     public static final Creator<Person> CREATOR = new Creator<Person>() {
