@@ -1,3 +1,4 @@
 <resources>
     <dimen name="name_game_title_text_margin">16dp</dimen>
+    <dimen name="name_game_data_margin">14dp</dimen>
 </resources>

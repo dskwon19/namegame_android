@@ -2,6 +2,7 @@ package com.willowtreeapps.namegame.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -17,17 +18,20 @@ import com.willowtreeapps.namegame.core.NameGameApplication;
 import com.willowtreeapps.namegame.network.api.ProfilesRepository;
 import com.willowtreeapps.namegame.network.api.model.NameGame;
 import com.willowtreeapps.namegame.network.api.model.Person;
+import com.willowtreeapps.namegame.util.AnalyticsUtil;
 import com.willowtreeapps.namegame.util.CircleBorderTransform;
 import com.willowtreeapps.namegame.util.Ui;
 import com.willowtreeapps.namegame.viewmodel.NameGameViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -45,6 +49,8 @@ public class NameGameFragment extends Fragment {
 
     private TextView title;
     private ViewGroup container;
+    private TextView data;
+    private ImageView more;
     private List<ImageView> faces = new ArrayList<>(6);
     private NameGameViewModel nameGameViewModel;
 
@@ -66,6 +72,8 @@ public class NameGameFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         title = view.findViewById(R.id.title);
         container = view.findViewById(R.id.face_container);
+        data = view.findViewById(R.id.data);
+        more = view.findViewById(R.id.more);
         prepareViewLoad();
         setNameGameListeners();
     }
@@ -86,6 +94,28 @@ public class NameGameFragment extends Fragment {
             face.setScaleX(0);
             face.setScaleY(0);
         }
+
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.reset_data:
+                                AnalyticsUtil.resetData(getContext());
+                                setDataView();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
     }
 
     /**
@@ -124,6 +154,20 @@ public class NameGameFragment extends Fragment {
 
         title.setText(String.format("%s %s", nameGame.getCorrectPerson().getFirstName(), nameGame.getCorrectPerson().getLastName()));
         title.setAlpha(1);
+
+        setDataView();
+    }
+
+    private void setDataView() {
+        int correct = AnalyticsUtil.getCorrectAttempts(getContext());
+        int total = AnalyticsUtil.getTotalAttempts(getContext());
+
+        int percent = 0;
+        if (total > 0 ){
+            percent = (correct * 100) / total;
+        }
+
+        data.setText(String.format(Locale.US, "%d/%d (%d%%)", correct, total, percent));
     }
 
     /**

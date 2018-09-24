@@ -5,12 +5,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/name_game_data_margin"
+        android:layout_marginEnd="@dimen/name_game_data_margin"
+        android:layout_marginStart="@dimen/name_game_data_margin">
+
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_more_vert_black_24dp"/>
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/name_game_title_text_margin"
         android:textSize="22sp"
+        android:textStyle="bold"
         android:textColor="@color/darkGray"
         android:gravity="center_horizontal"/>
 

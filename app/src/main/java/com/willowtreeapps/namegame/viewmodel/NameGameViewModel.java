@@ -9,6 +9,7 @@ import com.willowtreeapps.namegame.network.api.ProfilesRepository;
 import com.willowtreeapps.namegame.network.api.model.NameGame;
 import com.willowtreeapps.namegame.network.api.model.Person;
 import com.willowtreeapps.namegame.network.api.model.Profiles;
+import com.willowtreeapps.namegame.util.AnalyticsUtil;
 
 import java.util.List;
 
@@ -49,9 +50,11 @@ public class NameGameViewModel extends AndroidViewModel {
         if (nameGame.getValue() != null) {
             if (nameGame.getValue().isCorrectPersonSelected(person)) {
                 isCorrect.postValue(true);
+                AnalyticsUtil.incrementCorrectAttempt(getApplication());
             } else {
                 isCorrect.postValue(false);
             }
+            AnalyticsUtil.incrementTotalAttempt(getApplication());
         }
     }
 
