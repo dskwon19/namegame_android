@@ -7,4 +7,7 @@
     <string name="incorrect_text">Incorrect</string>
     <string name="next_round">Next round</string>
     <string name="meet">Meet</string>
+    <string name="error_fetch_profiles">Error retrieving profiles. Please reload the app.</string>
+    <string name="turn_on_hint_mode">Turn on hint mode</string>
+    <string name="turn_off_hint_mode">Turn off hint mode</string>
 </resources>

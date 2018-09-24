@@ -5,4 +5,8 @@
         android:id="@+id/reset_data"
         android:title="@string/reset_data"/>
 
+    <item
+        android:id="@+id/hint_mode"
+        android:title="@string/turn_on_hint_mode"/>
+
 </menu>

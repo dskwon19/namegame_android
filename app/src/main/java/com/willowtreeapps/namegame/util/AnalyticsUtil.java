@@ -9,7 +9,7 @@ public class AnalyticsUtil {
     private static final String TOTAL_KEY = "TOTAL_KEY";
     private static final String CORRECT_KEY = "CORRECT_KEY";
 
-    private static SharedPreferences getSharedPreferences(Context context) {
+    public static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 

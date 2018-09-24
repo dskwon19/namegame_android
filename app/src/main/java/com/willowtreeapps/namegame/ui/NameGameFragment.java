@@ -1,6 +1,7 @@
 package com.willowtreeapps.namegame.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +25,12 @@ import com.willowtreeapps.namegame.util.Ui;
 import com.willowtreeapps.namegame.viewmodel.NameGameViewModel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -39,6 +44,7 @@ import androidx.lifecycle.ViewModelProviders;
 public class NameGameFragment extends Fragment {
 
     private static final Interpolator OVERSHOOT = new OvershootInterpolator();
+    private static final String HINT_KEY = "HINT_KEY";
 
     @Inject
     ListRandomizer listRandomizer;
@@ -60,10 +66,16 @@ public class NameGameFragment extends Fragment {
     private List<ImageView> faces = new ArrayList<>(6);
     private NameGameViewModel nameGameViewModel;
 
+    private final Random rand = new Random();
+    private final Handler handler = new Handler();
+    private Runnable hintRunnable;
+    private boolean hintEnabled;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         NameGameApplication.get(getActivity()).component().inject(this);
+        hintEnabled = AnalyticsUtil.getSharedPreferences(getContext()).getBoolean(HINT_KEY, false);
     }
 
     @Nullable
@@ -110,24 +122,43 @@ public class NameGameFragment extends Fragment {
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PopupMenu popup = new PopupMenu(getContext(), view);
-                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.reset_data:
-                                AnalyticsUtil.resetData(getContext());
-                                setDataView();
-                                break;
-                        }
-                        return false;
-                    }
-                });
-                popup.show();
+                initMoreMenu(view);
             }
         });
+    }
+
+    /**
+     * Initialize game menu popup
+     *
+     * @param view The anchor view
+     */
+    private void initMoreMenu(View view) {
+        final PopupMenu popup = new PopupMenu(getContext(), view);
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+        if (hintEnabled) {
+            popup.getMenu().findItem(R.id.hint_mode).setTitle(getString(R.string.turn_off_hint_mode));
+        } else {
+            popup.getMenu().findItem(R.id.hint_mode).setTitle(getString(R.string.turn_on_hint_mode));
+        }
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.reset_data:
+                        AnalyticsUtil.resetData(getContext());
+                        setDataView();
+                        break;
+                    case R.id.hint_mode:
+                        hintEnabled = !hintEnabled;
+                        setViews(nameGameViewModel.getNameGame().getValue());
+                        break;
+                }
+                return false;
+            }
+        });
+        popup.show();
     }
 
     /**
@@ -144,20 +175,31 @@ public class NameGameFragment extends Fragment {
             @Override
             public void onChanged(Boolean correct) {
                 if (correct != null) {
-                    if (correct) {
-                        isCorrect.setText(R.string.correct_text);
-                    } else {
-                        isCorrect.setText(R.string.incorrect_text);
-                    }
-                    correctContainer.setVisibility(View.VISIBLE);
-
-                    // Disable click when displaying the correct face
-                    for (int i = 0; i < faces.size(); i++) {
-                        faces.get(i).setOnClickListener(null);
-                    }
+                    setCorrectView(correct);
                 }
             }
         });
+    }
+
+    /**
+     * Method to set views related to the correct results
+     *
+     * @param correct Boolean if the user is correct
+     */
+    private void setCorrectView(Boolean correct) {
+        if (correct) {
+            isCorrect.setText(R.string.correct_text);
+        } else {
+            isCorrect.setText(R.string.incorrect_text);
+        }
+        correctContainer.setVisibility(View.VISIBLE);
+
+        // Disable click when displaying the correct face
+        for (int i = 0; i < faces.size(); i++) {
+            faces.get(i).setOnClickListener(null);
+        }
+        // Stops hint mode from running
+        handler.removeCallbacks(hintRunnable);
     }
 
     /**
@@ -166,16 +208,52 @@ public class NameGameFragment extends Fragment {
      * @param nameGame The current NameGame
      */
     private void setViews(NameGame nameGame) {
-        setImages(faces, nameGame.getRandomPeople());
-        animateFacesIn();
+        if (nameGame != null) {
+            setImages(faces, nameGame.getRandomPeople());
+            animateFacesIn();
 
-        String name = String.format("%s %s", nameGame.getCorrectPerson().getFirstName(), nameGame.getCorrectPerson().getLastName());
+            String name = String.format("%s %s", nameGame.getCorrectPerson().getFirstName(), nameGame.getCorrectPerson().getLastName());
 
-        title.setText(name);
-        title.setAlpha(1);
+            title.setText(name);
+            title.setAlpha(1);
 
-        setDataView();
-        prepareCorrectView(nameGame, name);
+            setDataView();
+            prepareCorrectView(nameGame, name);
+
+            toggleHintMode(nameGame, hintEnabled);
+        }
+    }
+
+    /**
+     * Method to start hint mode
+     *
+     * @param nameGame The current NameGame
+     */
+    private void toggleHintMode(NameGame nameGame, boolean enabled) {
+        if (enabled) {
+            final Set<Integer> generated = new LinkedHashSet<>();
+            while (generated.size() < 3) {
+                Integer next = rand.nextInt(4) + 1;
+                if (next != nameGame.getRandomPeople().indexOf(nameGame.getCorrectPerson())) {
+                    generated.add(next);
+                }
+            }
+            final Iterator<Integer> iter = generated.iterator();
+            final int delay = 5000;
+
+            hintRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    faces.get(iter.next()).setVisibility(View.GONE);
+                    if (iter.hasNext()) {
+                        handler.postDelayed(this, delay);
+                    }
+                }
+            };
+            handler.postDelayed(hintRunnable, delay);
+        } else {
+            handler.removeCallbacks(hintRunnable);
+        }
     }
 
     /**
@@ -229,6 +307,7 @@ public class NameGameFragment extends Fragment {
         for (int i = 0; i < n; i++) {
             ImageView face = faces.get(i);
             final int finalI = i;
+            face.setVisibility(View.VISIBLE);
             face.setOnClickListener(null);
             face.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,8 +1,9 @@
 package com.willowtreeapps.namegame.viewmodel;
 
 import android.app.Application;
-import android.util.Log;
+import android.widget.Toast;
 
+import com.willowtreeapps.namegame.R;
 import com.willowtreeapps.namegame.core.ListRandomizer;
 import com.willowtreeapps.namegame.core.NameGameApplication;
 import com.willowtreeapps.namegame.network.api.ProfilesRepository;
@@ -29,6 +30,8 @@ public class NameGameViewModel extends AndroidViewModel {
     private MutableLiveData<NameGame> nameGame = new MutableLiveData<>();
     private MutableLiveData<Boolean> isCorrect = new MutableLiveData<>();
     private Profiles profiles;
+
+    private ProfilesRepository.Listener profilesListener;
 
     public NameGameViewModel(Application application) {
         super(application);
@@ -59,19 +62,19 @@ public class NameGameViewModel extends AndroidViewModel {
      * Method to load all profiles
      */
     private void registerProfilesRepo() {
-        profilesRepository.register(new ProfilesRepository.Listener() {
+        profilesListener = new ProfilesRepository.Listener() {
             @Override
             public void onLoadFinished(Profiles people) {
-                Log.v("DAVID", "Success");
                 profiles = people;
                 createNewGame();
             }
 
             @Override
             public void onError(Throwable error) {
-                Log.v("DAVID", "Error");
+                Toast.makeText(getApplication(), R.string.error_fetch_profiles, Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        profilesRepository.register(profilesListener);
     }
 
     /**
@@ -105,5 +108,11 @@ public class NameGameViewModel extends AndroidViewModel {
      */
     public MutableLiveData<Boolean> isCorrect() {
         return isCorrect;
+    }
+
+    @Override
+    public void onCleared() {
+        profilesRepository.unregister(profilesListener);
+        super.onCleared();
     }
 }
