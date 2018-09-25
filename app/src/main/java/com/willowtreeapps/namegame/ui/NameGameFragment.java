@@ -46,7 +46,6 @@ import static com.willowtreeapps.namegame.viewmodel.NameGameViewModel.LIMIT;
 public class NameGameFragment extends Fragment {
 
     private static final Interpolator OVERSHOOT = new OvershootInterpolator();
-    private static final String HINT_KEY = "HINT_KEY";
 
     @Inject
     ListRandomizer listRandomizer;
@@ -72,13 +71,12 @@ public class NameGameFragment extends Fragment {
     private final Handler handler = new Handler();
     private Runnable hintRunnable;
     private final int delay = 5000;
-    private boolean hintEnabled;
+    private boolean hintEnabled = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         NameGameApplication.get(getActivity()).component().inject(this);
-        hintEnabled = AnalyticsUtil.getSharedPreferences(getContext()).getBoolean(HINT_KEY, false);
     }
 
     @Nullable
